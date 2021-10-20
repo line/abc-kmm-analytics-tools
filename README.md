@@ -1,12 +1,10 @@
-# abc-kmm-analytics-tools
+![abc-kmm-analytics-tools: Analytics Tools for Kotlin Multiplatform Mobile iOS and android](images/cover.png)
 
 [![Kotlin](https://img.shields.io/badge/kotlin-1.5.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![KMM](https://img.shields.io/badge/KMM-0.2.7-lightgreen.svg?logo=KMM)](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform-mobile)
 [![AGP](https://img.shields.io/badge/AGP-7.0.1-green.svg?logo=AGP)](https://developer.android.com/studio/releases/gradle-plugin)
 [![Gradle](https://img.shields.io/badge/Gradle-7.0.2-blue.svg?logo=Gradle)](https://gradle.org)
 [![Platform](https://img.shields.io/badge/platform-ios,android-lightgray.svg?style=flat)](https://img.shields.io/badge/platform-ios-lightgray.svg?style=flat)
-
-Analytics Tools for Kotlin Multiplatform Mobile iOS and android
 
 ## Index
 - [Features](#Features)
