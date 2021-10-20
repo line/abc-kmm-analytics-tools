@@ -1,0 +1,6 @@
+{
+  "UIIntegrationViewController": "ui integration",
+  "ControlsViewController": "controls sample",
+  "TableViewCellViewController": "tableViewCell sample",
+  "CollectionViewCellViewController": "collectionViewCell sample"
+}

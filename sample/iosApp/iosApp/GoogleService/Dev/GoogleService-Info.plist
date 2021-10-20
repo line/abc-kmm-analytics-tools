@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CLIENT_ID</key>
+    <string>287144224835-qeleuvkrm0vf63cpl8rq7s0qt42ltqga.apps.googleusercontent.com</string>
+    <key>REVERSED_CLIENT_ID</key>
+    <string>com.googleusercontent.apps.287144224835-qeleuvkrm0vf63cpl8rq7s0qt42ltqga</string>
+    <key>API_KEY</key>
+    <string>AIzaSyAdvsdAB-CJBUMW-QnUwwURZ_S1Kb6PGQk</string>
+    <key>GCM_SENDER_ID</key>
+    <string>287144224835</string>
+    <key>PLIST_VERSION</key>
+    <string>1</string>
+    <key>BUNDLE_ID</key>
+    <string>com.linecorp.abc.vvid.alpha</string>
+    <key>PROJECT_ID</key>
+    <string>vvid-debug</string>
+    <key>STORAGE_BUCKET</key>
+    <string>vvid-debug.appspot.com</string>
+    <key>IS_ADS_ENABLED</key>
+    <false></false>
+    <key>IS_ANALYTICS_ENABLED</key>
+    <false></false>
+    <key>IS_APPINVITE_ENABLED</key>
+    <true></true>
+    <key>IS_GCM_ENABLED</key>
+    <true></true>
+    <key>IS_SIGNIN_ENABLED</key>
+    <true></true>
+    <key>GOOGLE_APP_ID</key>
+    <string>1:287144224835:ios:5499209fc8337bee7a4cf6</string>
+    <key>DATABASE_URL</key>
+    <string>https://vvid-debug.firebaseio.com</string>
+</dict>
+</plist>
