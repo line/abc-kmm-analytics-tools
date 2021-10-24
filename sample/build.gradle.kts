@@ -18,13 +18,5 @@ allprojects {
         google()
         mavenCentral()
         mavenLocal()
-        maven {
-            isAllowInsecureProtocol = true
-            url = uri("http://repo.navercorp.com/maven-release/")
-        }
-        maven {
-            isAllowInsecureProtocol = true
-            url = uri("http://repo.navercorp.com/maven-snapshot/")
-        }
     }
 }

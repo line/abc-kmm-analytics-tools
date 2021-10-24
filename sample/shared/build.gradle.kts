@@ -8,7 +8,7 @@ plugins {
 
 version = "1.0"
 
-val analyticsTools = "com.linecorp:abc-analytics-tools-kmm:1.0.14"
+val analyticsTools = "com.linecorp.abc:kmm-analytics-tools:1.0.14"
 
 kotlin {
     android()
@@ -25,8 +25,8 @@ kotlin {
 
     cocoapods {
         ios.deploymentTarget = "10.0"
-        homepage = "https://github.com/line/analytics-tools-kmm/sample/iosApp"
-        summary = "Sample with analytics-tools-kmm"
+        homepage = "https://github.com/line/abc-kmm-analytics-tools/sample/iosApp"
+        summary = "Sample with abc-kmm-analytics-tools"
 
         useLibraries()
 
@@ -49,7 +49,6 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation("com.google.android.material:material:1.2.1")
                 implementation(analyticsTools)
                 api(analyticsTools)
             }
@@ -78,7 +77,7 @@ android {
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDir("src/androidMain/res")
     defaultConfig {
-        minSdk = 24
+        minSdk = 21
         targetSdk = 30
     }
     buildTypes {

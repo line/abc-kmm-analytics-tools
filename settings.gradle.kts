@@ -20,4 +20,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "abc-kmm-analytics-tools"
+rootProject.name = "kmm-analytics-tools"

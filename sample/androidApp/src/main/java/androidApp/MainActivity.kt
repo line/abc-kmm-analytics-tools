@@ -24,7 +24,6 @@ fun <T: View> T.setOnClickListener(l: View.OnClickListener?) {
 
 fun <T: View> T.registerTrigger(invoke: () -> Unit) {
     print("setOnClickListener")
-
 }
 
 class MainActivity : AppCompatActivity() {

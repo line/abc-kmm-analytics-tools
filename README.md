@@ -23,13 +23,10 @@
 
 ## Features
 - Unified handling of various event trackers is possible
-- Automatical tracking and sending events of screen view and capture
-- Provieds screen name mapper
+- Automatically tracking and sending events of screen view and capture
+- Provide screen name mapper
 - Remove boilerplate by binding UI elements to event triggers
 - Common interfaces available in KMM Shared
-
-### Restrictions by transcoding
-- It is difficult to use swift smoothly because kotlin is converted to objective-c and objective-c is converted to swift.
 
 ## Example
 ![](/images/sh03.gif)
@@ -45,36 +42,6 @@
 ### Gradle Settings
 Add below gradle settings into your KMP (Kotlin Multiplatform Project)
 
-#### build.gradle.kts in root
-```kotlin
-buildscript {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:7.0.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url = uri("http://repo.navercorp.com/maven-release/")
-            isAllowInsecureProtocol = true
-        }
-        maven {
-            url = uri("http://repo.navercorp.com/maven-snapshot/")
-            isAllowInsecureProtocol = true
-        }
-    }
-}
-```
-
 #### build.gradle.kts in shared
 ```kotlin
 plugins {
@@ -83,7 +50,7 @@ plugins {
     kotlin("native.cocoapods")
 }
 
-val analyticsTools = "com.linecorp:abc-kmm-analytics-tools:1.0.14"
+val analyticsTools = "com.linecorp.abc:kmm-analytics-tools:1.0.14"
 
 kotlin {
     android()
@@ -111,7 +78,6 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation("com.google.android.material:material:1.2.1")
                 implementation(analyticsTools)
                 api(analyticsTools)
             }

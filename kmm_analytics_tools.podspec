@@ -1,14 +1,14 @@
 Pod::Spec.new do |spec|
-    spec.name                     = 'abc_kmm_analytics_tools'
+    spec.name                     = 'kmm_analytics_tools'
     spec.version                  = '1.0.14'
     spec.homepage                 = 'https://github.com/line/abc-kmm-analytics-tools'
     spec.source                   = { :git => "Not Published", :tag => "Cocoapods/#{spec.name}/#{spec.version}" }
     spec.authors                  = ''
     spec.license                  = ''
-    spec.summary                  = 'AnalyticsTools with Kotlin Multiplatform Mobile'
+    spec.summary                  = 'Analytics Tools for Kotlin Multiplatform Mobile iOS and android'
 
     spec.static_framework         = true
-    spec.vendored_frameworks      = "build/cocoapods/framework/abc_kmm_analytics_tools.framework"
+    spec.vendored_frameworks      = "build/cocoapods/framework/kmm_analytics_tools.framework"
     spec.libraries                = "c++"
     spec.module_name              = "#{spec.name}_umbrella"
 
@@ -28,7 +28,7 @@ Pod::Spec.new do |spec|
 
     spec.script_phases = [
         {
-            :name => 'Build abc_kmm_analytics_tools',
+            :name => 'Build kmm_analytics_tools',
             :execution_position => :before_compile,
             :shell_path => '/bin/sh',
             :script => <<-SCRIPT

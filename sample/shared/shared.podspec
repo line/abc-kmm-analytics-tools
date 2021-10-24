@@ -1,11 +1,11 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'shared'
     spec.version                  = '1.0'
-    spec.homepage                 = 'https://git.linecorp.com/abc/analytics-tools-kmm/sample/iosApp'
+    spec.homepage                 = 'https://github.com/line/abc-kmm-analytics-tools/sample/iosApp'
     spec.source                   = { :git => "Not Published", :tag => "Cocoapods/#{spec.name}/#{spec.version}" }
     spec.authors                  = ''
     spec.license                  = ''
-    spec.summary                  = 'Sample with analytics-tools-kmm'
+    spec.summary                  = 'Sample with abc-kmm-analytics-tools'
 
     spec.static_framework         = true
     spec.vendored_frameworks      = "build/cocoapods/framework/shared.framework"

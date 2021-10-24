@@ -55,7 +55,7 @@ actual class ATEventCenter {
             val baseParams = listOf(
                 BaseParam.ScreenClass(screenClass),
                 BaseParam.ScreenName(screenName))
-            var params = baseParams + extraParams
+            val params = baseParams + extraParams
             configuration.delegates.forEach {
                 it.sendAfterMapping(event, params)
             }
