@@ -1,4 +1,9 @@
+import org.jetbrains.kotlin.cli.common.toBooleanLenient
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
+val isSnapshotUpload = System.getProperty("snapshot").toBooleanLenient() ?: false
+val libVersion = "1.0.14"
+val gitName = "abc-${project.name}"
 
 buildscript {
     repositories {
@@ -14,6 +19,14 @@ buildscript {
     }
 }
 
+plugins {
+    id("com.android.library")
+    id("maven-publish")
+    id("signing")
+    kotlin("multiplatform")
+    kotlin("native.cocoapods")
+}
+
 allprojects {
     ext {
         set("compileSdkVersion", 30)
@@ -26,27 +39,93 @@ allprojects {
         google()
         mavenCentral()
     }
+
+    group = "com.linecorp.abc"
+    version = if (isSnapshotUpload) "$libVersion-SNAPSHOT" else libVersion
+
+    val javadocJar by tasks.registering(Jar::class) {
+        archiveClassifier.set("javadoc")
+    }
+
+    afterEvaluate {
+        extensions.findByType<PublishingExtension>()?.apply {
+            repositories {
+                maven {
+                    url = if (isSnapshotUpload) {
+                        uri("https://oss.sonatype.org/content/repositories/snapshots/")
+                    } else {
+                        uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                    }
+
+                    val sonatypeUsername: String? by project
+                    val sonatypePassword: String? by project
+
+                    println("sonatypeUsername, sonatypePassword -> $sonatypeUsername, ${sonatypePassword?.masked()}")
+
+                    credentials {
+                        username = sonatypeUsername ?: ""
+                        password = sonatypePassword ?: ""
+                    }
+                }
+            }
+
+            publications.withType<MavenPublication>().configureEach {
+                artifact(javadocJar.get())
+
+                pom {
+                    name.set(artifactId)
+                    description.set("AnalyticsTools with Kotlin Multiplatform Mobile. Compatible with iOS and Android")
+                    url.set("https://github.com/line/$gitName")
+
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+                    developers {
+                        developer {
+                            name.set("LINE Corporation")
+                            email.set("dl_oss_dev@linecorp.com")
+                            url.set("https://engineering.linecorp.com/en/")
+                        }
+                        developer {
+                            id.set("pisces")
+                            name.set("Steve Kim")
+                            email.set("pisces@linecorp.com")
+                        }
+                    }
+                    scm {
+                        connection.set("scm:git@github.com:line/$gitName.git")
+                        developerConnection.set("scm:git:ssh://github.com:line/$gitName.git")
+                        url.set("http://github.com/line/$gitName")
+                    }
+                }
+            }
+        }
+
+        extensions.findByType<SigningExtension>()?.apply {
+            val publishing = extensions.findByType<PublishingExtension>() ?: return@apply
+            val signingKey: String? by project
+            val signingPassword: String? by project
+
+            println("signingKey, signingPassword -> ${signingKey?.slice(0..9)}, ${signingPassword?.masked()}")
+
+            isRequired = !isSnapshotUpload
+            useInMemoryPgpKeys(signingKey, signingPassword)
+            sign(publishing.publications)
+        }
+
+        tasks.withType<Sign>().configureEach {
+            onlyIf { !isSnapshotUpload }
+        }
+    }
 }
-
-plugins {
-    id("com.android.library")
-    id("maven-publish")
-    id("signing")
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
-}
-
-group = "com.linecorp.abc"
-version = "1.0.14"
-
-val isSnapshotUpload = false
-val gitRepositoryName = "abc-${project.name}"
 
 kotlin {
-
     cocoapods {
         ios.deploymentTarget = "10.0"
-        homepage = "https://github.com/line/$gitRepositoryName"
+        homepage = "https://github.com/line/$gitName"
         summary = "Analytics Tools for Kotlin Multiplatform Mobile iOS and android"
     }
 
@@ -124,85 +203,6 @@ android {
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("abcAnalyticsTools") {
-            if (isSnapshotUpload) {
-                from(components.findByName("debug"))
-            } else {
-                from(components.findByName("release"))
-            }
-
-            groupId = project.group.toString()
-            artifactId = project.name
-            version = if (isSnapshotUpload) "${project.version}-SNAPSHOT" else project.version.toString()
-
-            pom {
-                name.set(artifactId)
-                description.set("AnalyticsTools with Kotlin Multiplatform Mobile. Compatible with iOS and Android")
-                url.set("https://github.com/line/$gitRepositoryName")
-
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-
-                developers {
-                    developer {
-                        name.set("LINE Corporation")
-                        email.set("dl_oss_dev@linecorp.com")
-                        url.set("https://engineering.linecorp.com/en/")
-                    }
-                    developer {
-                        id.set("pisces")
-                        name.set("Steve Kim")
-                        email.set("pisces@linecorp.com")
-                    }
-                }
-
-                scm {
-                    connection.set("scm:git@github.com:line/$gitRepositoryName.git")
-                    developerConnection.set("scm:git:ssh://github.com:line/$gitRepositoryName.git")
-                    url.set("http://github.com/line/$gitRepositoryName")
-                }
-            }
-        }
-    }
-    repositories {
-        maven {
-            name = "MavenCentral"
-            url = if (isSnapshotUpload) {
-                uri("https://oss.sonatype.org/content/repositories/snapshots/")
-            } else {
-                uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            }
-
-            val sonatypeUsername: String? by project
-            val sonatypePassword: String? by project
-
-            println("sonatypeUsername, sonatypePassword -> $sonatypeUsername, ${sonatypePassword?.masked()}")
-
-            credentials {
-                username = sonatypeUsername ?: ""
-                password = sonatypePassword ?: ""
-            }
-        }
-    }
-}
-
-signing {
-    val signingKey: String? by project
-    val signingPassword: String? by project
-
-    println("signingKey, signingPassword -> ${signingKey?.slice(0..9)}, ${signingPassword?.masked()}")
-
-    isRequired = !isSnapshotUpload
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications["abcAnalyticsTools"])
 }
 
 fun String.masked() = map { "*" }.joinToString("")
