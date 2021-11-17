@@ -1,6 +1,7 @@
 package com.linecorp.abc.analytics
 
 import com.linecorp.abc.analytics.extensions.className
+import com.linecorp.abc.analytics.extensions.screenClass
 import com.linecorp.abc.analytics.extensions.screenName
 import com.linecorp.abc.analytics.interfaces.ATEventParamProvider
 import com.linecorp.abc.analytics.objects.BaseParam
@@ -73,13 +74,19 @@ actual class ATEventCenter {
         private fun send(event: Event, extraParams: List<KeyValueContainer> = listOf(), from: UIViewController?) {
             val vc = from ?: configuration.topViewControllerBlock.invoke()
             vc?.let {
-                val screenClass = configuration.mapScreenClassBlock?.invoke(vc) ?: vc.className()
-                val screenName = it.screenName(screenClass) ?: return
-                val baseParams = listOf(
-                    BaseParam.ScreenClass(screenClass),
-                    BaseParam.ScreenName(screenName))
-                var params = baseParams + extraParams
-                sendAfterMapping(event, params)
+                val screenClassInExtraParams = extraParams.screenClass()
+                val screenNameInExtraParams = extraParams.screenName()
+                val screenClassValue = (screenClassInExtraParams?.value as? String)
+                    ?: configuration.mapScreenClassBlock?.invoke(vc)
+                    ?: vc.className()
+                val screenNameValue = (screenNameInExtraParams?.value as? String)
+                    ?: it.screenName(screenClassValue)
+                    ?: return
+                val baseParams = listOfNotNull(
+                    screenClassInExtraParams?.let { null } ?: BaseParam.ScreenClass(screenClassValue),
+                    screenNameInExtraParams?.let { null } ?: BaseParam.ScreenName(screenNameValue)
+                )
+                sendAfterMapping(event, baseParams + extraParams)
             } ?: sendAfterMapping(event, extraParams)
         }
 

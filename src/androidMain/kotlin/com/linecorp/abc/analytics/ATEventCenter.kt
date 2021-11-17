@@ -8,6 +8,8 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.content.ContextCompat
+import com.linecorp.abc.analytics.extensions.screenClass
+import com.linecorp.abc.analytics.extensions.screenName
 import com.linecorp.abc.analytics.interfaces.ATDynamicScreenNameMappable
 import com.linecorp.abc.analytics.objects.BaseParam
 import com.linecorp.abc.analytics.objects.KeyValueContainer
@@ -55,16 +57,20 @@ actual class ATEventCenter {
             extraParams: List<KeyValueContainer> = listOf(),
             from: Any?
         ) {
-            from?.let {
-                val screenClass = from?.javaClass?.simpleName ?: configuration.topScreenNameBlock.invoke() ?: return
-                val screenName = (from as? ATDynamicScreenNameMappable)?.mapScreenName()
-                    ?: ATScreenNameMapper.getScreenName(screenClass)
+            val screenClass = from?.javaClass?.simpleName ?: configuration.topScreenClassBlock.invoke()
+            screenClass?.let {
+                val screenClassInExtraParams = extraParams.screenClass()
+                val screenNameInExtraParams = extraParams.screenName()
+                val screenClassValue = (screenClassInExtraParams?.value as? String) ?: it
+                val screenNameValue = (screenNameInExtraParams?.value as? String)
+                    ?: (from as? ATDynamicScreenNameMappable)?.mapScreenName()
+                    ?: ATScreenNameMapper.getScreenName(screenClassValue)
                     ?: return
-                val baseParams = listOf(
-                    BaseParam.ScreenClass(screenClass),
-                    BaseParam.ScreenName(screenName))
-                val params = baseParams + extraParams
-                sendAfterMapping(event, params)
+                val baseParams = listOfNotNull(
+                    screenClassInExtraParams?.let { null } ?: BaseParam.ScreenClass(screenClassValue),
+                    screenNameInExtraParams?.let { null } ?: BaseParam.ScreenName(screenNameValue)
+                )
+                sendAfterMapping(event, baseParams + extraParams)
             } ?: sendAfterMapping(event, extraParams)
         }
 

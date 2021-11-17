@@ -10,7 +10,7 @@ actual class Configuration {
 
     internal var canTrackScreenViewBlock: ((Activity) -> Boolean)? = null
         private set
-    internal var topScreenNameBlock: () -> String? = { context.topActivityName() }
+    internal var topScreenClassBlock: () -> String? = { context.topActivityName() }
         private set
 
     internal lateinit var context: Context
@@ -19,7 +19,7 @@ actual class Configuration {
         canTrackScreenViewBlock = block
     }
 
-    fun topScreenName(block: () -> String?) {
-        topScreenNameBlock = block
+    fun topScreenClass(block: () -> String?) {
+        topScreenClassBlock = block
     }
 }
