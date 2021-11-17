@@ -10,6 +10,7 @@ enum class Event(val value: String) {
     CAPTURE("capture");
 }
 
+@Suppress("NO_ACTUAL_FOR_EXPECT")
 expect class ATEventCenter {
     @ThreadLocal
     companion object {

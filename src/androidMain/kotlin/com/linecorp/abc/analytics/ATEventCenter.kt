@@ -1,7 +1,6 @@
 package com.linecorp.abc.analytics
 
 import android.Manifest
-import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
@@ -48,17 +47,25 @@ actual class ATEventCenter {
         }
 
         // -------------------------------------------------------------------------------------------
-        //  Public
+        //  Internal
         // -------------------------------------------------------------------------------------------
 
-        fun send(event: Event, screenClass: String, extraParams: List<KeyValueContainer> = listOf()) {
-            send(event, screenClass, null, extraParams)
-        }
-
-        fun send(event: Event, extraParams: List<KeyValueContainer> = listOf(), from: Any?) {
-            val screenClass = from?.javaClass?.simpleName ?: configuration.topScreenNameBlock.invoke() ?: return
-            val screenName = (from as? ATDynamicScreenNameMappable)?.mapScreenName()
-            send(event, screenClass, screenName, extraParams)
+        internal fun send(
+            event: Event,
+            extraParams: List<KeyValueContainer> = listOf(),
+            from: Any?
+        ) {
+            from?.let {
+                val screenClass = from?.javaClass?.simpleName ?: configuration.topScreenNameBlock.invoke() ?: return
+                val screenName = (from as? ATDynamicScreenNameMappable)?.mapScreenName()
+                    ?: ATScreenNameMapper.getScreenName(screenClass)
+                    ?: return
+                val baseParams = listOf(
+                    BaseParam.ScreenClass(screenClass),
+                    BaseParam.ScreenName(screenName))
+                val params = baseParams + extraParams
+                sendAfterMapping(event, params)
+            } ?: sendAfterMapping(event, extraParams)
         }
 
         // -------------------------------------------------------------------------------------------
@@ -83,17 +90,7 @@ actual class ATEventCenter {
                 screenCaptureObserver)
         }
 
-        private fun send(
-            event: Event,
-            screenClass: String,
-            screenName: String?,
-            extraParams: List<KeyValueContainer> = listOf()
-        ) {
-            val screenName = screenName ?: ATScreenNameMapper.getScreenName(screenClass) ?: return
-            val baseParams = listOf(
-                BaseParam.ScreenClass(screenClass),
-                BaseParam.ScreenName(screenName))
-            val params = baseParams + extraParams
+        private fun sendAfterMapping(event: Event, params: List<KeyValueContainer>) {
             configuration.delegates.forEach {
                 it.sendAfterMapping(event, params)
             }

@@ -53,7 +53,7 @@ plugins {
     kotlin("native.cocoapods")
 }
 
-val analyticsTools = "com.linecorp.abc:kmm-analytics-tools:1.0.15"
+val analyticsTools = "com.linecorp.abc:kmm-analytics-tools:1.1.0"
 
 kotlin {
     android()
@@ -477,6 +477,23 @@ extension MainViewController: ATDynamicScreenNameMappable {
         "ScreenNameAsYouWant"
     }
 }
+```
+
+### Send with Screen Parameters Manually
+Android
+```kotlin
+ATEventCenter.send(Event.CLICK, listOf(
+    BaseParam.ScreenClass("screenClass"),
+    BaseParam.ScreenName("screenName"),
+))
+```
+
+iOS
+```swift
+ATEventCenter.Companion().send(event: .click, params: [
+    BaseParam.ScreenClass(value: "screenClass"),
+    BaseParam.ScreenName(value: "screenName"),
+])
 ```
 
 ## TODO

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'kmm_analytics_tools'
-    spec.version                  = '1.0.15'
+    spec.version                  = '1.1.0'
     spec.homepage                 = 'https://github.com/line/abc-kmm-analytics-tools'
     spec.source                   = { :git => "Not Published", :tag => "Cocoapods/#{spec.name}/#{spec.version}" }
     spec.authors                  = ''
