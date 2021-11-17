@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.cli.common.toBooleanLenient
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 val isSnapshotUpload = System.getProperty("snapshot").toBooleanLenient() ?: false
-val libVersion = "1.0.14"
+val libVersion = "1.0.15"
 val gitName = "abc-${project.name}"
 
 buildscript {
@@ -160,6 +160,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("com.google.android.material:material:1.2.1")
+                implementation("com.google.code.gson:gson:2.8.6")
                 implementation("androidx.startup:startup-runtime:1.0.0")
             }
         }
