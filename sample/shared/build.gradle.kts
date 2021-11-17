@@ -8,7 +8,7 @@ plugins {
 
 version = "1.0"
 
-val analyticsTools = "com.linecorp.abc:kmm-analytics-tools:1.0.14"
+val analyticsTools = "com.linecorp.abc:kmm-analytics-tools:1.0.15"
 
 kotlin {
     android()

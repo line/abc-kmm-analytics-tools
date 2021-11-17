@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.content.ContextCompat
+import com.linecorp.abc.analytics.interfaces.ATDynamicScreenNameMappable
 import com.linecorp.abc.analytics.objects.BaseParam
 import com.linecorp.abc.analytics.objects.KeyValueContainer
 import com.linecorp.abc.analytics.observers.ActivityLifecycleObserver
@@ -51,23 +52,13 @@ actual class ATEventCenter {
         // -------------------------------------------------------------------------------------------
 
         fun send(event: Event, screenClass: String, extraParams: List<KeyValueContainer> = listOf()) {
-            val screenName = ATScreenNameMapper.getScreenName(screenClass) ?: return
-            val baseParams = listOf(
-                BaseParam.ScreenClass(screenClass),
-                BaseParam.ScreenName(screenName))
-            val params = baseParams + extraParams
-            configuration.delegates.forEach {
-                it.sendAfterMapping(event, params)
-            }
+            send(event, screenClass, null, extraParams)
         }
 
-        // -------------------------------------------------------------------------------------------
-        //  Internal
-        // -------------------------------------------------------------------------------------------
-
-        internal fun send(event: Event, extraParams: List<KeyValueContainer> = listOf(), from: Activity?) {
+        fun send(event: Event, extraParams: List<KeyValueContainer> = listOf(), from: Any?) {
             val screenClass = from?.javaClass?.simpleName ?: configuration.topScreenNameBlock.invoke() ?: return
-            send(event, screenClass, extraParams)
+            val screenName = (from as? ATDynamicScreenNameMappable)?.mapScreenName()
+            send(event, screenClass, screenName, extraParams)
         }
 
         // -------------------------------------------------------------------------------------------
@@ -90,6 +81,22 @@ actual class ATEventCenter {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 true,
                 screenCaptureObserver)
+        }
+
+        private fun send(
+            event: Event,
+            screenClass: String,
+            screenName: String?,
+            extraParams: List<KeyValueContainer> = listOf()
+        ) {
+            val screenName = screenName ?: ATScreenNameMapper.getScreenName(screenClass) ?: return
+            val baseParams = listOf(
+                BaseParam.ScreenClass(screenClass),
+                BaseParam.ScreenName(screenName))
+            val params = baseParams + extraParams
+            configuration.delegates.forEach {
+                it.sendAfterMapping(event, params)
+            }
         }
 
         // -------------------------------------------------------------------------------------------

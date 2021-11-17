@@ -12,7 +12,7 @@
 - [Introduce Architecture](#Introduce-Architecture)
 - [Installation](#Installation)
 - [Configure](#Configure)
-  - [Using Screen Mapper](#Using-Screen-Mapper)
+  - [Screen Mapper](#Screen-Mapper)
   - [Initialization](#Initialization)
 - [Implementation](#Implementation)
   - [Delegate](#Delegate)
@@ -20,6 +20,9 @@
   - [ATEventParamProvider](#ATEventParamProvider)
   - [ATEventTriggerUICompatible](#ATEventTriggerUICompatible)
 - [Integration with UI](#Integration-with-UI)
+- [Advanced](#Advanced)
+    - [Dynamic Screen Name Mapping](#Dynamic-Screen-Name-Mapping)
+- [TODO](#TODO)
 
 ## Features
 - Unified handling of various event trackers is possible
@@ -35,7 +38,7 @@
 - iOS
   - Deployment Target 10.0 or higher
 - Android
-  - minSdkVersion 21
+  - minSdkVersion 23
 
 ## Installation
 
@@ -50,7 +53,7 @@ plugins {
     kotlin("native.cocoapods")
 }
 
-val analyticsTools = "com.linecorp.abc:kmm-analytics-tools:1.0.14"
+val analyticsTools = "com.linecorp.abc:kmm-analytics-tools:1.0.15"
 
 kotlin {
     android()
@@ -122,7 +125,7 @@ iOS
 
 ## Configure
 
-### Using Screen Mapper
+### Screen Mapper
 Screen mapper is mapping system that to map between screen class and screen name. The file `ATScreenNameMapper.json` that defines screen mapping table will automatically used if needed in system.
 
 Android
@@ -448,6 +451,31 @@ Using Directly
     ATEventCenter.Companion().send(
         event: .click,
         params: [BaseParam.ClickSource(value: "hello")])
+}
+```
+
+## Advanced
+
+### Dynamic Screen Name Mapping
+You can dynamically determine the screen name by implementing ATDynamicScreenNameMappable.
+
+Android
+```kotlin
+class MainActivity : AppCompatActivity(), ATDynamicScreenNameMappable {
+    
+    override fun mapScreenName(): String? {
+        return "ScreenNameAsYouWant"
+    }
+}
+```
+
+iOS
+```swift
+extension MainViewController: ATDynamicScreenNameMappable {
+    
+    func mapScreenName() -> String? {
+        "ScreenNameAsYouWant"
+    }
 }
 ```
 

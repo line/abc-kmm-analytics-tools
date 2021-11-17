@@ -1,6 +1,7 @@
 package com.linecorp.abc.analytics
 
 import com.linecorp.abc.analytics.extensions.className
+import com.linecorp.abc.analytics.extensions.screenName
 import com.linecorp.abc.analytics.interfaces.ATEventParamProvider
 import com.linecorp.abc.analytics.objects.BaseParam
 import com.linecorp.abc.analytics.objects.KeyValueContainer
@@ -73,7 +74,7 @@ actual class ATEventCenter {
             val vc = from ?: configuration.topViewControllerBlock.invoke()
             vc?.let {
                 val screenClass = configuration.mapScreenClassBlock?.invoke(vc) ?: vc.className()
-                val screenName = ATScreenNameMapper.getScreenName(screenClass) ?: return
+                val screenName = it.screenName(screenClass) ?: return
                 val baseParams = listOf(
                     BaseParam.ScreenClass(screenClass),
                     BaseParam.ScreenName(screenName))
